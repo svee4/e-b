@@ -13,6 +13,7 @@ builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
 builder.Services.AddControllers();
 
 
+
 // Add session state
 // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/app-state?view=aspnetcore-7.0
 builder.Services.AddDistributedMemoryCache();
@@ -30,6 +31,11 @@ builder.Services.AddSession(options =>
 });
 
 WebApplication app = builder.Build();
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+	ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+});
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

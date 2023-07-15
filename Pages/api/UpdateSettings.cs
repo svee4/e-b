@@ -61,6 +61,15 @@ public class UpdateSettings : ControllerBase
 			else
 			{
 
+				string[] forbiddenUsernames = { "api", "authenticate", "settings", "shared", "about", "error", "index", "search", "upload", "user",
+												"admin", "content", "login", "logout", "register" };
+
+				if (forbiddenUsernames.Contains(body.Username))
+				{
+					ModelState.AddModelError("Username", "Username is forbidden");
+					return BadRequest(ModelState);
+				}
+
 				string oldname = user.Username;
 				user.Username = body.Username!;
 				user.UsernameChanged = true;
