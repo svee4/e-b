@@ -1,0 +1,64 @@
+form {
+	display: flex;
+	justify-content: center;
+	gap: 0.5em;
+	padding: 1em;
+}
+
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 0.75em;
+	width: min(95%, 600px);
+}
+
+.input-container {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25em;
+}
+
+/*#region */
+/* copilot wrote this code */
+.spinner {
+	margin: 100px auto 0;
+	width: 70px;
+	text-align: center;
+	display: none;
+}
+.bounce1 {
+	width: 18px;
+	height: 18px;
+	background-color: #333;
+
+	border-radius: 100%;
+	display: inline-block;
+	-webkit-animation: sk-bounce 1.4s infinite ease-in-out both;
+	animation: sk-bounce 1.4s infinite ease-in-out both;
+}
+.bounce2 {
+	width: 18px;
+	height: 18px;
+	background-color: #333;
+
+	border-radius: 100%;
+	display: inline-block;
+	-webkit-animation: sk-bounce 1.4s infinite ease-in-out both;
+	animation: sk-bounce 1.4s infinite ease-in-out both;
+	-webkit-animation-delay: -0.16s;
+	animation-delay: -0.16s;
+}
+.bounce3 {
+	width: 18px;
+	height: 18px;
+	background-color: #333;
+
+	border-radius: 100%;
+	display: inline-block;
+	-webkit-animation: sk-bounce 1.4s infinite ease-in-out both;
+	animation: sk-bounce 1.4s infinite ease-in-out both;
+	-webkit-animation-delay: -0.32s;
+	animation-delay: -0.32s;
+}
+/*#endregion*/

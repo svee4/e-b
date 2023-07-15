@@ -1,0 +1,135 @@
+﻿@page
+@model e_b.Pages.settings.indexModel
+@{
+	var session = Domain.Models.Session.TryGet(HttpContext);
+
+}
+
+@if (session is null) 
+{
+	<h2>
+		<partial name="_ErrorPartial" model='Domain.Models.View.ErrorPartial.FromStatusCode(401, "Log in to edit your settings")' />
+	</h2>
+}
+else
+{
+	<h2>Settings</h2>
+	<form id="f">
+		<div class="input-container-container" >
+			<style>
+				.input-container-container > div {
+					display: flex;
+					flex-direction: column;
+					gap: 0.25em;
+					width: 400px
+				}
+
+			</style>
+			@if (Model.User.CanChangeUsername) 
+			{
+				<div style="display: flex; flex-direction: column; gap: 0.25em; width: min-content;" >
+					<label for="username">Username (You can change your username once!!! All existing links to your files will break!!!!)</label>
+					<input type="text" id="username" name="username" value="@Model.User.Username" />
+					<button type="button" id="change-username">Change username</button>
+				</div>
+			}
+			<div>
+				<label for="description">Profile description</label>
+				<textarea id="description" name="description" value="@Model.User.Description" maxlength="512"></textarea>
+			</div>
+			<!-- another classic todo moment
+			<div>
+				<label for="profilepicture">Profile picture source (must be a path to a file hosted here. the path must start with /)</label>
+				<input type="text" id="profilepicture" name="profilepicture" value="@Model.User.ProfilePicture" maxlength="161" />
+			</div>
+			-->
+		</div>
+		
+		<button style="margin-top: 16px;" type="button" id="savebutton">Save</button>
+	</form>
+
+	<script type="module">
+		import { Toast } from "/js/toast.js";
+
+		document.querySelector("#savebutton").addEventListener("click", async () => {
+
+			const form = new FormData(document.querySelector("#f"));
+			const response = await fetch("/api/updatesettings", {
+				headers: { "Accept": "application/json" },
+				method: "POST",
+				body: form
+			});
+
+			if (!response.ok) {
+				console.error(response);
+				const json = await response.json();
+				console.error(json);
+				if (json.errors) {
+					mapErrors(json.errors);
+				} else {
+					Toast.show(JSON.stringify(json, null, 2), "error");
+				}
+			} else if (response.status === 204) {
+				Toast.show("No changes made", "info");
+			} else {
+				const json = await response.json();
+				if (json.errors) {
+					Toast.show("Settings saved partially, review errors and reload page to see true values", "error")
+					mapErrors(json.errors);
+				} else {
+					window.location = window.location + "?saved=true";
+				}
+			}
+
+		});
+
+		document.querySelector("#change-username")?.addEventListener("click", async function(){
+			const username = document.querySelector("#username").value;
+			if (username === "@Model.User.Username") return;
+			if (!confirm("Are you really really rly sure you want to change your username to: '" + username + "'??!?!?")) return;
+
+			const form = new FormData();
+			form.append("username", username);
+
+			const response = await fetch("/api/updatesettings", {
+				headers: { "Accept": "application/json" },
+				method: "POST",
+				body: form
+			});
+
+			const json = response.status !== 204 ? await response.json() : {};
+
+			if (response.ok) {
+				if (response.status === 204) {
+					alert("Username changed");
+				}
+				if (json.errors?.username) {
+					alert(json.errors.username.join("; "));
+				} else {
+					alert("Username changed");
+					window.location.href = window.location.href;
+				}
+			} else {
+				if (json.errors) {
+					mapErrors(json.errors);
+				} else {
+					Toast.show(JSON.stringify(json, null, 2), "error");
+				}
+			}
+
+		});
+
+		function mapErrors(errors) {
+			errors = Object.entries(errors);
+			let output = []
+			for (const [key, value] of errors) {
+				output.push(`${key}: ${value.join("; ")}`);
+			}
+			Toast.show(output.join("<br/>"), "error");
+		}
+
+		if (window.location.search.includes("saved=true")) {
+			Toast.show("Settings saved", "success");
+		}
+	</script>
+}

@@ -1,0 +1,110 @@
+﻿@page
+@model e_b.Pages.content.itemModel
+@{
+}
+
+<link rel="stylesheet" href="/css/item.css" />
+@if (!Model.mNotFound) 
+{
+	bool isOwner = Domain.Models.Session.TryGet(HttpContext)?.Username == Model.Username;
+
+	<div class="controls">
+		<div class="left">
+			<h2 class="name" >
+				@Model.ContentName
+			</h2>
+			<h3 class="username" >
+				<a href="/user/@Model.Username">
+					@Model.Username
+				</a>
+			</h3>
+		</div>
+		<div class="right">
+			<button>
+				Copy content link
+			</button>
+			<script>
+				document.currentScript.previousElementSibling.addEventListener("click", () => {
+					navigator.clipboard.writeText(window.location.href);
+				});
+			</script>
+			<button>
+				Copy direct image link
+			</button>
+			<script>
+				document.currentScript.previousElementSibling.addEventListener("click", () => {
+					navigator.clipboard.writeText(document.querySelector(".content-container img")?.src ?? document.querySelector(".content-container video source")?.src ?? document.querySelector(".content-container a")?.href ?? "");
+				});
+			</script>
+			@if (isOwner)
+			{
+				<button id="delete">Delete</button>
+				<script type="module" >
+					import { Toast } from "/js/toast.js";
+					document.querySelector("#delete").addEventListener("click", async () => {
+						if (!confirm("Are you sure you want to delete this item?")) return;
+
+						const response = await fetch("/api/delete?name=" + decodeURIComponent("@Model.ContentName"), {
+							method: "DELETE",
+							headers: {
+								"Accept": "application/json",
+							}
+						});
+						
+						if (response.ok) {
+							alert("Deleted");
+							window.location = window.location;
+						} else {
+							try {
+								const json = await response.json();
+								console.error(json);
+								if (json.errors) {
+									const errors = Object.entries(errors);
+									let output = []
+									for (const [key, value] of errors) {
+										output.push(`${key}: ${value.join("; ")}`);
+									}
+									Toast.show("Failed to delete: <br/>" + output.join("<br/>"), "error");
+								} else Toast.show("Failed to delete: <br/>", JSON.stringify(json), "error");
+							
+							} catch (e) {
+								Toast.show("Failed to delete (unknown error)", "error");
+							}
+						}
+						
+					});
+
+				</script>
+			}
+		</div>
+	</div>
+
+	<p class="description" >
+		@Model.Description
+	</p>
+
+	<div class="content-container">
+		@if (Model.ContentType == Domain.Models.Database.Content.ContentType.Image)
+		{
+			<img src="@Model.ContentSource" />
+		}
+		else if (Model.ContentType == Domain.Models.Database.Content.ContentType.Video)
+		{
+			<video controls >
+				<source  src="@Model.ContentSource" />
+			</video>
+		}
+		else {
+			<p>
+				<a href="@Model.ContentSource">@Model.ContentFilename</a>
+			</p>
+		}
+	</div>
+
+}
+else 
+{
+	<h2>
+		<partial name="_ErrorPartial" model='Domain.Models.View.ErrorPartial.FromStatusCode(404, "Specified content not found")' />
+	</h2>
+}

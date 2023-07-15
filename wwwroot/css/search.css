@@ -1,0 +1,64 @@
+.search-container {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5em;
+	width: 100%;
+	justify-content: space-evenly;
+}
+
+.input-container {
+	display: flex;
+	flex-direction: column;
+	gap: 0.125em;
+	flex-grow: 1;
+}
+
+/* literally just copied from content.css */
+
+.content-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2em;
+}
+
+.grid-item {
+	padding: 0.25em;
+
+	display: flex;
+	flex-direction: column;
+	gap: 0.125em;
+	width: 200px;
+	max-height: 400px;
+}
+
+.grid-item > a {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.grid-item p {
+	font-size: 0.9em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.grid-item img {
+	object-fit: cover;
+	border: 1px solid #ccc;
+}
+
+@media screen and (width <= 800px) {
+	.search-container {
+		flex-direction: column;
+	}
+
+	.content-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.grid-item {
+		width: unset;
+		min-width: 0;
+	}
+}

@@ -1,0 +1,28 @@
+﻿@page "{username}"
+@model e_b.Pages.userModel
+@{
+}
+
+@if (Model.mNotFound) 
+{
+	<h2>
+		<partial name="_ErrorPartial" model='Domain.Models.View.ErrorPartial.FromStatusCode(404, "Specified user not found")' />
+	</h2>
+}
+else
+{
+	<main style="display: flex; flex-direction: column; gap: 0.5em;" >
+		<div style="display: flex; align-items: center;" >
+			<img src='@Model.ProfilePicture' style="width: 40px; aspect-ratio: 1/1;" />&nbsp;
+			<h2>
+				@Model.Username
+			</h2>
+		</div>
+
+		<p>
+			@Model.Description
+		</p>
+		<a style="margin-top: 1em;" href="/content/@Model.Username">View content (@Model.ContentCount total)</a>
+	</main>
+
+}

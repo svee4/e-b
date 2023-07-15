@@ -1,0 +1,3 @@
+﻿@using e_b.Domain.Extensions;
+@model Domain.Models.View.ErrorPartial;
+<code>@Model.StatusCode@(Model.StatusDescription.IsNullOrEmpty() ? "" : " " + Model.StatusDescription)</code>: @Model.Message

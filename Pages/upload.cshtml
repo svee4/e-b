@@ -1,0 +1,73 @@
+﻿@page
+@model e_b.Pages.uploadModel
+@{
+	bool isAuthenticated = Domain.Models.Session.IsAuthenticated(HttpContext);
+}
+
+<link rel="stylesheet" href="~/css/upload.css" />
+<form enctype="multipart/form-data" >
+
+	<div class="wrapper">
+
+		@if (!isAuthenticated)
+		{
+				<h2>Log in to upload</h2>
+		}
+
+		<div class="spinner">
+			<div class="bounce1"></div>
+			<div class="bounce2"></div>
+			<div class="bounce3"></div>
+		</div>
+
+		<div class="input-container">
+			<label for="file">File</label>
+			<input type="file" id="file" name="File" required />
+		</div>
+
+		<div class="input-container" >
+			<label for="name">Name</label>
+			<input type="text" id="name" name="Name" placeholder="ruby.png" maxlength="128" required />
+		</div>
+
+		<div class="input-container" >
+			<label for="filename">Filename</label>
+			<input type="text" id="filename" name="Filename" maxlength="128" />
+		</div>
+
+		<div class="input-container">
+			<label for="description">Description</label>
+			<textarea id="description" name="description" maxlength="512" ></textarea>
+		</div>
+
+		<div style="display: flex; gap: 0.25em; align-items: center;" >
+			<label for="unlisted">Unlisted</label>
+			<input style="aspect-ratio: 1/1; height: 1em;" type="checkbox" id="unlisted" name="Unlisted" value="true" />
+		</div>
+
+		<div class="input-container">
+			<label for="type">Type</label>
+			<select id="type" name="Type" >
+				<option value="-1">Auto</option>
+				@foreach (e_b.Domain.Models.Database.Content.ContentType type in Enum.GetValues(typeof(e_b.Domain.Models.Database.Content.ContentType)))
+				{
+					<option value="@((int)type)">@type.ToString()</option>
+				}
+			</select>
+		</div>
+
+		<button id="upload">Upload</button>
+
+		<div id="output" style="display: flex; flex-direction: column; gap:"></div>
+
+
+		@if (!isAuthenticated)
+		{
+			<script>
+				document.querySelectorAll("form *:is(input, select, textarea, button)").forEach((e) => e.disabled = true);
+			</script>
+		}
+
+	</div>
+</form>
+<script type="module" src="~/js/upload.js"></script>

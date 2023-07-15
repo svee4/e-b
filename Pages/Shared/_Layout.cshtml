@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="/favicon.png" />
+        <title>♥ @ViewData["Title"]</title>
+        <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
+    </head>
+    <body>
+    @{
+        Domain.Models.Option<Domain.Models.Session> session = Domain.Models.Session.TryGet(Context); string currentPage = Context.Request.Path;
+    }
+        <div id="toast-container"></div>
+        <header class="header">
+            <nav>
+                <a href="/" @(currentPage == "/" ? "data-current" : "")>Home</a>
+                <a href="/search" @(currentPage.StartsWith("/search") ? "data-current" : "")>Search</a>
+
+            @if (session.HasValue)
+            {
+                    <a href="/upload" @(currentPage.StartsWith("/upload") ? "data-current" : "")>Upload</a>
+                    <a href="/content/@session.Unwrap().Username" @(currentPage.StartsWith("/content") ? "data-current" : "")>My content</a>
+            }
+            </nav>
+            <div class="header-user">
+            @if (session.HasValue)
+            {
+                string username = session.Unwrap().Username;
+                    <a href="/user/@username">@username</a>
+            }
+            else
+            {
+                    <a href="/authenticate?fast=1">Log in</a>
+            }
+                <button class="header-pfp-button" aria-label="Menu">
+                    <img src="/heart.png" />
+                </button>
+                <div class="header-pfp-menu display-none">
+                @if (session.HasValue)
+                {
+                        <a href="/user/@session.Unwrap().Username">My profile</a>
+                }
+                else
+                {
+                        <a href="/authenticate?fast=1">Login</a>
+                }
+                    <a href="/settings"> Settings </a>
+                @if (session.HasValue)
+                {
+                        <a href="/authenticate/logout">Log out</a>
+                }
+                    <a href="/about">About</a>
+                </div>
+            </div>
+        </header>
+
+        <main>@RenderBody()</main>
+        <script src="~/js/main.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    </body>
+</html>
+

@@ -1,0 +1,117 @@
+:root {
+	--light-pink: #ffaec9;
+	--dark-pink: #a80874;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: inherit;
+}
+
+html {
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: rgb(254, 254, 254);
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+}
+
+a:is(:hover, :focus-within) {
+	color: var(--dark-pink);
+}
+
+.display-none {
+	display: none !important;
+}
+
+input,
+textarea,
+select,
+button {
+	padding: 0.125em;
+	font-size: 1em;
+}
+
+button {
+	border: 2px solid transparent;
+	border-radius: 4px;
+	padding: 0.5em 1em;
+
+	transition: 0.2s background, 0.2s border-color;
+	background-color: #f0f0f0;
+}
+
+button:not(:disabled):is(:hover, :focus-visible) {
+	background: color-mix(in srgb, var(--light-pink) 20%, white);
+	border-color: color-mix(in srgb, var(--light-pink) 5%, transparent);
+	cursor: pointer;
+}
+
+#toast-container {
+	position: fixed;
+	top: 10%;
+	left: 50%;
+	translate: -50% 0;
+	max-width: 90vw;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1em;
+}
+
+.toast {
+	display: flex;
+	align-items: center;
+	gap: 1em;
+	padding: 0.375em 0.75em;
+	border-radius: 5px;
+	background: rgb(252, 252, 252);
+	border: 2px solid color-mix(in srgb, var(--light-pink) 5%, transparent);
+}
+
+.toast-info {
+	border-color: blue;
+	background-color: color-mix(in srgb, blue 5%, white);
+}
+
+.toast-success {
+	border-color: green;
+	background-color: color-mix(in srgb, green 5%, white);
+}
+
+.toast-error {
+	border-color: red;
+	background-color: color-mix(in srgb, red 5%, white);
+}
+
+.toast > button {
+	border: none;
+	background: rgba(255, 255, 255, 0.2);
+	cursor: pointer;
+}
+
+.toast > button:is(:hover, :focus-visible) {
+	background: rgba(255, 255, 255, 0.6);
+}
+
+@media screen and (width <= 800px) {
+	.header-user > a {
+		display: none;
+	}
+
+	#toast-container {
+		top: unset;
+		bottom: 10%;
+		flex-direction: column-reverse;
+	}
+
+	.toast {
+		/* for some reason toasts "stretch" out too little on mobile... idk how 2 fix... good enough.... */
+		width: 90vw;
+		justify-content: space-between;
+	}
+}

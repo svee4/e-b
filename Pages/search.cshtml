@@ -1,0 +1,86 @@
+﻿@page
+@model e_b.Pages.searchModel
+@{
+}
+
+<link rel="stylesheet" href="/css/search.css" />
+<form method="get" >
+	<style>
+
+	</style>
+
+	<div class="search-container" >
+		<div class="input-container">
+			<label for="search-name">Search by name</label>
+			<input type="text" name="n" id="search-name" value="@Model.SearchData.Name" />
+		</div>
+
+		<div class="input-container">
+			<label for="search-user">Search by username</label>
+			<input type="text" name="u" id="search-user" value="@Model.SearchData.Username" />
+		</div>
+
+		<div class="input-container">
+			<label for="search-type">Search by type</label>
+			<select name="t" id="search-type">
+				<!option value="all" @(Model.SearchData.Type == "all" ? "selected " : "") >All</!option>
+				<!option value="image" @(Model.SearchData.Type == "image" ? "selected " : "")>Image</!option>
+				<!option value="video" @(Model.SearchData.Type == "video" ? "selected " : "")>Video</!option>
+				<!option value="other" @(Model.SearchData.Type == "other" ? "selected " : "")>Other</!option>
+			</select>
+		</div>
+
+		<div class="input-container">
+			<label for="order-by">Order by</label>
+			<select name="ob" id="order-by">
+				<!option value="date" @(Model.SearchData.OrderBy == "date" ? "selected " : "")>Upload date</!option>
+				<!option value="name" @(Model.SearchData.OrderBy == "name" ? "selected " : "")>Name</!option>
+				<!option value="username" @(Model.SearchData.OrderBy == "username" ? "selected " : "")>Username</!option>
+			</select>
+		</div>
+
+		<div class="input-container">
+			<label for="sort-by">Sort by</label>
+			<select name="sb" id="sort-by">
+				<!option value="desc" @(Model.SearchData.SortBy == "desc" ? "selected " : "")>Descending</!option>
+				<!option value="asc" @(Model.SearchData.SortBy == "asc" ? "selected " : "")>Ascending</!option>
+			</select>
+		</div>
+
+	</div>
+	<button style="margin: 6px;" >Search</button>
+</form>
+
+<div id="results-container">
+	<div class="content-grid">
+
+		@foreach (var item in Model.Results)
+		{
+		// (vscode users:)
+			// if these divs just run away whenever you format, thats a prettier thing
+			// .prettierignore doesnt work and editor.defaultFormatter doesnt work
+			// just dont format the file hahahaha this is so cool!!!
+	<div class="grid-item" >
+<a href="/content/@item.Username/@item.ContentName">@item.ContentName</a>
+<p><a href="/user/@item.Username">@item.Username</a></p>
+<p>@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+
+				@switch (item.ContentType)
+				{
+					case Domain.Models.Database.Content.ContentType.Image: 
+			<img src="@item.ContentSource" loading="lazy" />
+						break;
+					case Domain.Models.Database.Content.ContentType.Video:
+			<video src="@item.ContentSource" controls />
+						break;
+					default:
+			<a href="@item.ContentSource"><code>@item.ContentName</code></a>
+						break;
+				}
+
+
+	</div>
+		}
+
+	</div>
+</div>

@@ -1,0 +1,25 @@
+﻿@page
+@model e_b.Pages.authenticate.indexModel
+@{
+}
+
+<div>
+	<a href="@Model.AuthenticateURL" style="text-decoration: underline;" >Log in with Discord</a>
+</div>
+
+<script type="module">
+	const ss = localStorage.getItem("session");
+	if (ss) {
+		const session = JSON.parse(ss);
+		if (new Date(session.expireTime) < new Date()) {
+			const url = new URL(window.location.href);
+			url.searchParams.set("username", session.username);
+			url.searchParams.set("userid", session.userId);
+			url.searchParams.set("token", session.token);
+			url.searchParams.set("expiretime", session.expireTime);
+			url.searchParams.set("refreshtoken", session.refreshToken);
+			url.searchParams.set("avatarurl", session.avatarUrl);
+			@* window.location = url; todo if ever needs be to catch a dangling session *@ 
+		}
+	} 
+</script>

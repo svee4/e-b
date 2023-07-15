@@ -1,0 +1,42 @@
+.content-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2em;
+}
+
+.grid-item {
+	padding: 0.25em;
+
+	display: flex;
+	flex-direction: column;
+	gap: 0.125em;
+	max-width: 200px;
+}
+
+.grid-item > a {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.grid-item p {
+	font-size: 0.9em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.grid-item img {
+	object-fit: cover;
+	border: 1px solid #ccc;
+	/* max-height: 200px; */
+}
+
+@media screen and (width <= 800px) {
+	.content-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.grid-item {
+		min-width: 0;
+	}
+}

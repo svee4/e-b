@@ -1,0 +1,44 @@
+﻿@page "{username}"
+@model e_b.Pages.content.indexModel
+@{
+}
+
+<link rel="stylesheet" href="/css/content.css" />
+<div>
+	@if (Model.mNotFound) 
+	{
+		<h2>
+			<partial name="_ErrorPartial" model='Domain.Models.View.ErrorPartial.FromStatusCode(404, "Specified user not found")' />
+		</h2>
+	} 
+	else 
+	{
+	<h2>@Model.Username</h2>
+	<div class="content-grid">
+
+		@foreach (var item in Model.mContent) 
+		{
+			<div class="grid-item" >
+				<a href="/content/@Model.Username/@item.Name">@item.Name</a>
+				<p>@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+			
+				@switch (item.Type) 
+				{
+					case Domain.Models.Database.Content.ContentType.Image: 
+						<img src="@item.ContentSource" loading="lazy" />
+						break;
+					case Domain.Models.Database.Content.ContentType.Video:
+						<video src="@item.ContentSource" controls />
+						break;
+					default:
+						<a href="@item.ContentSource"><code>@item.Type</code></a>
+						break;
+				}
+
+				
+			</div>
+		}
+
+	</div>
+	}
+</div>

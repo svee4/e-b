@@ -1,0 +1,22 @@
+﻿@page
+@model e_b.Pages.indexModel
+@{
+	var session = Domain.Models.Session.TryGet(HttpContext);
+}
+
+<main>
+	<p>Haii :3</p>
+	@if (session != null)
+	{
+		<p>Logged in as <i>@session.Username</i></p>
+		<p><a style="text-decoration: underline;" href="/upload">Upload stuff</a></p>
+		<p><a style="text-decoration: underline;" href="/content/@session.Username">Look at your stuff</a></p>
+	}
+	else 
+	{
+	<p><a style="text-decoration: underline;" href="/authenticate">Log in</a></p>
+	}
+	<p><a style="text-decoration: underline;" href="/search">Search for stuff</a></p>
+	<p><a style="text-decoration: underline;" href="/about">View about page</a></p>
+
+</main>

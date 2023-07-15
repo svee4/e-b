@@ -1,0 +1,16 @@
+﻿@page
+@model e_b.Pages.authenticate.callbackModel
+@{
+}
+
+@if (Model.ErrorMessage != null)
+{
+	<h2>
+		@Model.ErrorMessage
+	</h2>
+}
+else {
+	<h2>
+		You will be redirected shortly
+	</h2>
+}
