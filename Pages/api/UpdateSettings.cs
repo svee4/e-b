@@ -76,9 +76,9 @@ public class UpdateSettings : ControllerBase
 				anythingChanged = true;
 
 				// need 2 update directory name... 
-				string? baseDirectory = _config["ContentDirectory"];
+				string? baseDirectory = _config["PhysicalContentDirectory"];
 				if (baseDirectory is null)
-					return Problem("ContentDirectory not configured", statusCode: (int)HttpStatusCode.InternalServerError);
+					return Problem("PhysicalContentDirectory not configured", statusCode: (int)HttpStatusCode.InternalServerError);
 
 				string oldDirectory = Path.Combine(baseDirectory, oldname);
 				string newDirectory = Path.Combine(baseDirectory, user.Username);

@@ -2,6 +2,7 @@ using e_b.Domain.Models.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace e_b.Pages.content
 {
@@ -43,8 +44,26 @@ namespace e_b.Pages.content
 				ContentFilename = item.Filename;
 				Description = item.Description;
 				ContentType = item.Type;
+
+				Domain.Models.View.OpenGraph og = new Domain.Models.View.OpenGraph();
+
+				og.Title = item.Name;
+				og.Description = item.Description ?? string.Empty;
+				og.Type = item.Type switch
+				{
+					Domain.Models.Database.Content.ContentType.Video => "video.other",
+					_ => "website"
+				};
+
+				og.Url = Request.GetDisplayUrl();
+				string myBaseUrl = $"{Request.Scheme}://{Request.Host}";
+				og.Image = $"{myBaseUrl}/{ContentSource}";
+
+				ViewData["OpenGraph"] = og;
 			}
+
 			else mNotFound = true;
 		}
+
 	}
 }

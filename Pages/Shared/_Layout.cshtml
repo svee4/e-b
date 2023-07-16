@@ -7,6 +7,15 @@
         <title>♥ @ViewData["Title"]</title>
         <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
         <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
+
+    @if (ViewData["OpenGraph"] is Domain.Models.View.OpenGraph og)
+    {
+            <meta property="og:title" content="@og.Title" />
+            <meta property="og:description" content="@og.Description" />
+            <meta property="og:image" content="@og.Image" />
+            <meta property="og:url" content="@og.Url" />
+            <meta property="og:type" content="@og.Type" />
+    }
     </head>
     <body>
     @{
