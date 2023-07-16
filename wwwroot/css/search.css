@@ -28,7 +28,6 @@
 	flex-direction: column;
 	gap: 0.125em;
 	width: 200px;
-	max-height: 400px;
 }
 
 .grid-item > a {
@@ -45,6 +44,7 @@
 .grid-item img {
 	object-fit: cover;
 	border: 1px solid #ccc;
+	max-height: 300px;
 }
 
 @media screen and (width <= 800px) {

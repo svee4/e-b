@@ -19,6 +19,9 @@
 					@Model.Username
 				</a>
 			</h3>
+			<p class="description" >
+				@Model.Description
+			</p>
 		</div>
 		<div class="right">
 			<button>
@@ -53,7 +56,6 @@
 						});
 						
 						if (response.ok) {
-							alert("Deleted");
 							window.location = window.location;
 						} else {
 							try {
@@ -80,9 +82,7 @@
 		</div>
 	</div>
 
-	<p class="description" >
-		@Model.Description
-	</p>
+
 
 	<div class="content-container">
 		@if (Model.ContentType == Domain.Models.Database.Content.ContentType.Image)

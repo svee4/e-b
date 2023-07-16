@@ -41,7 +41,7 @@ public class UpdateSettings : ControllerBase
 
 		bool anythingChanged = false;
 
-		if (!body.Username.IsNullOrEmpty())
+		if (!body.Username.IsNullOrEmpty() && body.Username != user.Username)
 		{
 			if (user.UsernameChanged)
 			{

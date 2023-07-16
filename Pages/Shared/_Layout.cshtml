@@ -8,10 +8,10 @@
                 <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
                 <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
 
-                <meta property="og:site_name" content="♥" />
         @if (ViewData["OpenGraph"] is Domain.Models.View.OpenGraph og)
         { @if (og.Title != null)
                 {
+                                <meta property="og:site_name" content="♥" />
                                 <meta property="og:title" content="@og.Title" />
                 } @if (og.Description != null)
                 {

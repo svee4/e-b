@@ -28,6 +28,7 @@
 	object-fit: cover;
 	border: 1px solid #ccc;
 	/* max-height: 200px; */
+	max-height: 300px;
 }
 
 @media screen and (width <= 800px) {
