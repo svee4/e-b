@@ -23,5 +23,8 @@ public class PostBody
 
 	[Required]
 	public Models.Database.Content.ContentType Type { get; set; }
+
+	public int? Width { get; set; }
+	public int? Height { get; set; }
 }
 

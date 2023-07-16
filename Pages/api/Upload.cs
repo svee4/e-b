@@ -49,7 +49,7 @@ public class Upload : ControllerBase
 		if (_databaseContext.Contents.Count(c => c.OwnerId == user.Id) >= 100)
 			return BadRequest("Users are limited to 100 files, plz contact admin if you actually reached this its just a temporarry thing :p");
 
-		var content = Domain.Models.Database.Content.Create(user, body.Name, body.Filename, body.Type, body.Description, null, body.Unlisted);
+		var content = Domain.Models.Database.Content.Create(user, body.Name, body.Filename, body.Type, body.Description, null, body.Unlisted, body.Width, body.Height);
 		if (content.IsErr)
 			return BadRequest($"{content.Error!.GetType()}: {content.Error!.Message}"); // im LAZY
 
@@ -68,6 +68,7 @@ public class Upload : ControllerBase
 		// save file
 		using (var fileStream = new FileStream(Path.Combine(directory, body.Filename), FileMode.Create))
 			body.File.CopyTo(fileStream);
+
 
 
 		return Created($"/{user.Username}/{content.Value!.Name}", new

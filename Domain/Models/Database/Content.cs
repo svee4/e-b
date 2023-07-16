@@ -34,6 +34,9 @@ public class Content
 
 	public ContentType Type { get; private set; } = ContentType.Unknown;
 
+	public int? Width { get; set; } = null;
+	public int? Height { get; set; } = null;
+
 	public Folder? Folder { get; private set; } = null;
 	public int? FolderId { get; private set; } = null;
 
@@ -43,7 +46,7 @@ public class Content
 	private Content() { }
 
 
-	public static Result<Content, Exception> Create(User owner, string name, string filename, ContentType type, string? description, int? folderId, bool unlisted)
+	public static Result<Content, Exception> Create(User owner, string name, string filename, ContentType type, string? description, int? folderId, bool unlisted, int? width, int? height)
 	{
 
 		if (name.Length > 128)
@@ -64,7 +67,9 @@ public class Content
 			Description = description,
 			FolderId = folderId,
 			Unlisted = unlisted,
-			CreatedAt = DateTime.UtcNow
+			CreatedAt = DateTime.UtcNow,
+			Width = width,
+			Height = height,
 		};
 
 	}

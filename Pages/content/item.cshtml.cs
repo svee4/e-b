@@ -45,19 +45,38 @@ namespace e_b.Pages.content
 				Description = item.Description;
 				ContentType = item.Type;
 
+
 				Domain.Models.View.OpenGraph og = new Domain.Models.View.OpenGraph();
 
 				og.Title = item.Name;
-				og.Description = item.Description ?? string.Empty;
+				og.Description = item.Description;
+				og.Url = Request.GetDisplayUrl();
+
 				og.Type = item.Type switch
 				{
 					Domain.Models.Database.Content.ContentType.Video => "video.other",
 					_ => "website"
 				};
 
-				og.Url = Request.GetDisplayUrl();
 				string myBaseUrl = $"{Request.Scheme}://{Request.Host}";
-				og.Image = $"{myBaseUrl}/{ContentSource}";
+
+				switch (item.Type)
+				{
+					case Domain.Models.Database.Content.ContentType.Image:
+						og.Image = $"{myBaseUrl}/{ContentSource}";
+						og.ImageAlt = item.Name;
+						og.ImageWidth = item.Width;
+						og.ImageHeight = item.Height;
+						break;
+					case Domain.Models.Database.Content.ContentType.Video:
+						og.Extra.Add("video", $"{myBaseUrl}/{ContentSource}");
+						og.Extra.Add("video:secure_url", $"{myBaseUrl}/{ContentSource}");
+						og.Extra.Add("video:width", "1920"); // idk freeballin lmao
+						og.Extra.Add("video:height", "1080");
+						break;
+
+				}
+
 
 				ViewData["OpenGraph"] = og;
 			}

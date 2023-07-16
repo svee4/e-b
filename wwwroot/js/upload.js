@@ -18,9 +18,47 @@ document.querySelector("#file").addEventListener("change", function () {
 	}
 });
 
+document.querySelector("#link").addEventListener("input", function () {
+	if (this.value) {
+		nameInput.placeholder = "";
+		filenameInput.placeholder = "";
+		if (!nameInput.value) nameInput.value = "";
+		if (!filenameInput.value) filenameInput.value = "";
+		fetch(this.value).then(r => {
+			if (r.ok) {
+				const t = r.headers.get("content-type");
+				fileExtension = t.split("/").pop();
+				filenameInput.placeholder = nameInput.value + "." + fileExtension;
+			}
+		});
+	}
+});
+
 document.querySelector("form").addEventListener("submit", async function (e) {
 	e.preventDefault();
 	document.querySelector(".spinner").style.display = "";
+
+	if (!this.link.value && !this.file.value) {
+		this.file.required = true;
+		this.link.required = true;
+	}
+
+	if (!this.reportValidity()) return;
+
+	if (this.link.value) {
+		// download link from the interwebz and set the value to file input
+		const response = await fetch(link.value);
+		if (!response.ok) {
+			appendOutput("Error downloading linked file", "error");
+			return;
+		}
+		const blob = await response.blob();
+		const file = new File([blob], "downloaded." + blob.type.split("/").pop(), { type: blob.type });
+
+		const dt = new DataTransfer();
+		dt.items.add(file);
+		this.file.files = dt.files;
+	}
 
 	const form = new FormData(this);
 
@@ -36,7 +74,7 @@ document.querySelector("form").addEventListener("submit", async function (e) {
 		// auto
 		let file = form.get("File");
 		let ext = file.name.split(".").pop().toLowerCase();
-
+		console.log(file.name, file);
 		switch (ext) {
 			case "jpg":
 			case "jpeg":
@@ -58,6 +96,18 @@ document.querySelector("form").addEventListener("submit", async function (e) {
 	if (contentType == types.Unknown) {
 		alert("Unknown file type, please select a type");
 		return false;
+	}
+
+	if (contentType == types.Image) {
+		// get width
+		let file = form.get("File");
+		let img = new Image();
+
+		img.src = URL.createObjectURL(file);
+		await new Promise(r => setTimeout(r, 100)); // :tf:
+
+		form.set("Width", img.width);
+		form.set("Height", img.height);
 	}
 
 	form.set("Type", parseInt(contentType));
