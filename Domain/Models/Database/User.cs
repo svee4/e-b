@@ -19,7 +19,7 @@ public class User
 	[Column(TypeName = "VARCHAR(512)")]
 	public string? Description { get; set; } = null;
 
-	[Column(TypeName = "VARCHAR(162)")] // 1 for /, 32 for username, 1 for /, 128 for content filename 
+	[Column(TypeName = "VARCHAR(162)")] // 1 for /, 32 for username, 1 for /, 128 for content filename
 	public string? ProfilePicture { get; set; } = null;
 
 	public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
@@ -28,8 +28,8 @@ public class User
 
 	public static User CreateNew(string discordUserId, string username)
 	{
-		if (discordUserId.Length != 18 && discordUserId.Length != 17)
-			throw new ArgumentException("Expected discord user id to be 18 or 17 characters long", nameof(discordUserId));
+		if (discordUserId.Length != 18 && discordUserId.Length != 19) // I don't think discord id's were 17 chars long...
+			throw new ArgumentException("Expected discord user id to be 18 or 19 characters long", nameof(discordUserId));
 
 		if (username.Length > 32)
 			throw new ArgumentException("Expected username to be equal to or less than 32 characters long", nameof(username));
