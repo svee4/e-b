@@ -4,7 +4,7 @@ namespace e_b.Domain.Models.Api.UpdateSettings;
 
 public class PostBody
 {
-	[MaxLength(32), MinLength(1), RegularExpression(@"^[a-zA-Z0-9\-_]+$", ErrorMessage = "Username can only contain A-Z, a-z, 0-9, - and _")]
+	[MaxLength(32), MinLength(3), RegularExpression(@"^[a-zA-Z0-9\-_]+$", ErrorMessage = "Username can only contain A-Z, a-z, 0-9, - and _")]
 	public string? Username { get; set; }
 
 	[MaxLength(512)]

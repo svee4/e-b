@@ -10,7 +10,7 @@ public class User
 {
 	public int Id { get; private set; } = 0;
 
-	[Column(TypeName = "CHAR(18)")]
+	[Column(TypeName = "CHAR(19)")]
 	public string DiscordUserId { get; set; } = string.Empty;
 
 	[Column(TypeName = "VARCHAR(32)")]
@@ -28,11 +28,14 @@ public class User
 
 	public static User CreateNew(string discordUserId, string username)
 	{
-		if (discordUserId.Length != 18 && discordUserId.Length != 17)
-			throw new ArgumentException("Expected discord user id to be 18 or 17 characters long", nameof(discordUserId));
+		if (discordUserId.Length != 18 && discordUserId.Length != 19 && discordUserId.Length != 17)
+			throw new ArgumentException("Expected discord user id length to be 17, 18 or 19 characters", nameof(discordUserId));
 
 		if (username.Length > 32)
-			throw new ArgumentException("Expected username to be equal to or less than 32 characters long", nameof(username));
+			throw new ArgumentException("Expected username length to be equal to or less than 32 characters", nameof(username));
+
+		if (username.Length < 3)
+			throw new ArgumentException("Expected username length to be equal to or more than 3 characters", nameof(username));
 
 		return new User
 		{

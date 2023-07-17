@@ -103,7 +103,6 @@ namespace e_b.Pages.authenticate
 					return;
 				}
 
-
 				try
 				{
 					user = JsonSerializer.Deserialize<UserResponse>(json);
@@ -121,6 +120,7 @@ namespace e_b.Pages.authenticate
 				}
 			}
 
+			// DOESNT WORK BTW
 			string? allowedIds = _config["AllowedIds"];
 			if (!allowedIds.IsNullOrEmpty())
 			{
@@ -132,21 +132,30 @@ namespace e_b.Pages.authenticate
 				}
 			}
 
-			var dbUser = await _databaseContext.Users.FirstOrDefaultAsync(u => u.DiscordUserId == user.id);
+			Domain.Models.Database.User? dbUser = await _databaseContext.Users.FirstOrDefaultAsync(u => u.DiscordUserId == user.id);
 			if (dbUser is null)
 			{
 				// insert new user info
 
-				// scuffed but check if the username is taken already
 				string username = user.username;
-				if (await _databaseContext.Users.AnyAsync(u => u.Username == username))
+				if (username.Length < 3) username = username + Random.Shared.Next(10, 99);
+
+				int i = 0;
+				while (await _databaseContext.Users.AnyAsync(u => u.Username == username))
 				{
-					string userid = user.id;
-					if (username.Length > 32 - 18)
-						username = username.Substring(0, 32 - 18);
-					if (userid.Length == 17)
-						userid += "0";
-					username = $"{username}_{user.id}"; // todo add logic to now allow usernames to end in 18 digits XD
+					if (i++ > 10) throw new Exception("Is this real life?");
+
+					// this might be top 5 worst things ive ever written 
+					if (username.Length >= 32)
+					{
+						const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-";
+						char[] buffer = new char[32];
+						for (int j = 0; j < buffer.Length; j++)
+							buffer[j] = chars[Random.Shared.Next(chars.Length)];
+
+						username = new string(buffer);
+					}
+					else username += Random.Shared.Next(10).ToString();
 				}
 
 				_databaseContext.Users.Add(Domain.Models.Database.User.CreateNew(user.id, username));
@@ -171,6 +180,6 @@ namespace e_b.Pages.authenticate
 	/*
 	"{\"id\": \"158127066187825152\", \"username\": \"alexnj\", \"global_name\": \"alex\", \"avatar\": \"f6c61209645aa6eba134ef4be777ccf8\", \"discriminator\": \"0\", \"public_flags\": 128, \"flags\": 128, \"banner\": \"b283ac435381915cb15029fed93d8136\", \"banner_color\": \"#25bfd8\", \"accent_color\": 2473944, \"locale\": \"en-GB\", \"mfa_enabled\": true, \"premium_type\": 2, \"avatar_decoration\": null}"
 	*/
-	record UserResponse(string id, string username, string global_name, string avatar, string discriminator, int public_flags, int flags, string banner, string banner_color, int accent_color, string locale, bool mfa_enabled, int premium_type, string avatar_decoration);
+	record UserResponse(string id, string username, string? global_name, string? avatar, string discriminator, int public_flags, int flags, string? banner, string? banner_color, int? accent_color, string locale, bool mfa_enabled, int premium_type, string? avatar_decoration);
 
 }
