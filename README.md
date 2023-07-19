@@ -9,7 +9,8 @@ hii this is the source code for a certain unnamed website
 3. Install Postgres
 4. Create an app on Discord for authentication
 5. Create an `appsettings.secret.json` based on `appsettings.secret.json.example`
-6. Run `dotnet watch` or `dotnet run`
+6. Migrate database
+7. Run `dotnet watch` or `dotnet run`
 
 ## Database changes
 
